@@ -10,7 +10,7 @@
 <style>
 :root{
 --bg:#eef1f0; --surface:#ffffff; --ink:#15212b; --muted:#5b6872; --line:#d3dad8;
---accent:#1f6f8b; --on-accent:#ffffff; --warn:#a4501b; --ok:#2f6b3d;
+--accent:#1f6f8b; --on-accent:#ffffff; --warn:#a4501b; --ok:#2f6b3d; --wa:#1a8f4c;
 --z1:#15212b; --z2:#2c4a5c; --z3:#3f7488; --z4:#79a6b4; --z5:#bcd3d9;
 --zt1:#ffffff; --zt2:#ffffff; --zt3:#ffffff; --zt4:#10202a; --zt5:#10202a;
 --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
@@ -19,7 +19,7 @@
 }
 @media (prefers-color-scheme: dark){:root{
 --bg:#0f1519; --surface:#172027; --ink:#e4ebee; --muted:#93a2ab; --line:#2a3741;
---accent:#5fb3cf; --on-accent:#0b1418; --warn:#e3925c; --ok:#7fc28e;
+--accent:#5fb3cf; --on-accent:#0b1418; --warn:#e3925c; --ok:#7fc28e; --wa:#1f7a45;
 --z1:#e4ebee; --z2:#a9cbd6; --z3:#5fb3cf; --z4:#3a7488; --z5:#24414d;
 --zt1:#0b1418; --zt2:#0b1418; --zt3:#0b1418; --zt4:#e4ebee; --zt5:#e4ebee;
 color-scheme:dark}}
@@ -47,6 +47,9 @@ button{font:inherit;cursor:pointer}
 .btn{border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);border-radius:6px;padding:11px 18px;font-weight:600}
 .btn.ghost{background:transparent;color:var(--accent)}
 .status{font-size:.88rem;color:var(--ok);font-weight:600}
+.wa{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--wa);color:#ffffff;text-decoration:none;font-weight:600;border-radius:6px;padding:13px 16px}
+.wa svg{width:22px;height:22px;flex:none}
+.wa.off{opacity:.55}
 .shot{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px}
 .shot .result{padding-top:12px}
 .shot .zone{background:var(--bg)}
@@ -123,6 +126,10 @@ footer{font-size:.78rem;color:var(--muted)}
 <section>
 <div class="inputs">
 <div class="field full">
+<label for="aluno">Seu nome</label>
+<input id="aluno" type="text" class="txt" placeholder="Ex.: João Silva" autocomplete="name">
+</div>
+<div class="field full">
 <label for="ex">Exercício</label>
 <input id="ex" type="text" class="txt" value="Agachamento livre" placeholder="Ex.: Supino reto" autocomplete="off">
 </div>
@@ -155,6 +162,8 @@ footer{font-size:.78rem;color:var(--muted)}
 </div>
 <div class="zones" id="zones"></div>
 <p class="muted">Use estas cargas quando o treino pedir uma zona (ex.: Z1 / 85%).</p>
+<a class="wa" id="wa" href="https://wa.me/5591992779173" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 9.5c.3 2 2.5 4.2 4.5 4.5l1-1.2 1.8.9c-.3 1-1 1.6-2 1.6-3 0-6.3-3.3-6.3-6.3 0-1 .6-1.7 1.6-2l.9 1.8z" fill="currentColor"/></svg>Enviar para o treinador</a>
+<p class="warn" id="wawarn" hidden>Preencha seu nome no topo da página antes de enviar.</p>
 </section>
 
 <section>
@@ -228,7 +237,7 @@ footer{font-size:.78rem;color:var(--muted)}
 (function(){
 var $=function(id){return document.getElementById(id)};
 var r5=function(v){return Math.round(v/5)*5};
-var KEY='autoreg-lista', DRAFT='autoreg-s';
+var KEY='autoreg-lista', DRAFT='autoreg-s', NOME='autoreg-nome', WA='5591992779173';
 var Z=[['Z1','Máxima',80,100,true],['Z2','Submáxima',60,80],['Z3','Moderada',40,60],['Z4','Leve',20,40],['Z5','Muito leve',0,20]];
 var list=[], pendingDel=null, statusTimer=null;
 
@@ -248,7 +257,7 @@ function render(){
   $('exname').textContent=v.name||'Meu exercício';
   if(!(v.c>0)||!(v.reps>=1)){
     w.textContent=!(v.c>0)?'Digite a carga do teste.':'Digite quantas repetições você completou.';
-    w.hidden=false;$('e1rm').innerHTML='–<small>kg</small>';$('zones').innerHTML='';$('test').textContent='';renderList();return;
+    w.hidden=false;$('e1rm').innerHTML='–<small>kg</small>';$('zones').innerHTML='';$('test').textContent='';$('wa').href='https://wa.me/'+WA;$('wa').classList.add('off');renderList();return;
   }
   if(v.reps>10){w.textContent='Acima de 10 repetições a estimativa fica pouco confiável. Prefira um teste com até 5 repetições.';w.hidden=false}
   else w.hidden=true;
@@ -260,6 +269,12 @@ function render(){
     var lo=r5(one*z[2]/100), hi=r5(one*z[3]/100), n=i+1, lt=z[4]?'':'&lt;';
     return '<div class="zone"><span class="tag" style="background:var(--z'+n+');color:var(--zt'+n+')">'+z[0]+'</span><strong>'+z[1]+'</strong><span class="pct">'+z[2]+'–'+lt+z[3]+'%</span><span class="kg">'+lo+' a '+lt+hi+' kg</span></div>';
   }).join('');
+  var nome=$('aluno').value.trim();
+  var dataTeste=new Date(saved?saved.t:Date.now()).toLocaleDateString('pt-BR');
+  var linhas=['*Teste de carga: '+(nome||'(sem nome)')+'*','📅 '+dataTeste,'🏋️ '+(v.name||'Exercício'),'Teste: '+kgTxt(v.c)+' kg × '+v.reps+' · 1RM estimado: '+r5(one)+' kg',''];
+  Z.forEach(function(z){var lo=r5(one*z[2]/100), hi=r5(one*z[3]/100);linhas.push(z[0]+' '+z[1]+': '+lo+' a '+(z[4]?'':'<')+hi+' kg')});
+  $('wa').href='https://wa.me/'+WA+'?text='+encodeURIComponent(linhas.join(String.fromCharCode(10)));
+  $('wa').classList.toggle('off',!nome);
   try{localStorage.setItem(DRAFT,JSON.stringify({ex:$('ex').value,c:$('load').value,reps:$('reps').value}))}catch(e){}
   renderList();
 }
@@ -310,6 +325,15 @@ $('list').addEventListener('click',function(e){
   }
 });
 
+$('wa').addEventListener('click',function(e){
+  if(!$('aluno').value.trim()){e.preventDefault();$('wawarn').hidden=false;$('aluno').focus();$('aluno').scrollIntoView({behavior:'smooth',block:'center'})}
+});
+$('aluno').addEventListener('input',function(){
+  try{localStorage.setItem(NOME,$('aluno').value)}catch(e){}
+  if($('aluno').value.trim())$('wawarn').hidden=true;
+  render();
+});
+try{$('aluno').value=localStorage.getItem(NOME)||''}catch(e){}
 load();
 try{var s=JSON.parse(localStorage.getItem(DRAFT)||'null');if(s){if(s.ex!=null)$('ex').value=s.ex;$('load').value=s.c;$('reps').value=s.reps}}catch(e){}
 ['ex','load','reps'].forEach(function(id){$(id).addEventListener('input',render)});

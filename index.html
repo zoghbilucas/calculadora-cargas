@@ -316,5 +316,18 @@ try{var s=JSON.parse(localStorage.getItem(DRAFT)||'null');if(s){if(s.ex!=null)$(
 render();
 })();
 </script>
+<style>
+@media (max-width:480px){
+.shot{padding:14px 12px}
+.zone,.zhead{grid-template-columns:40px minmax(0,1fr) 118px;column-gap:10px;row-gap:0;padding:8px 10px}
+.zone .tag{grid-row:1/3;align-self:center}
+.zone strong{grid-column:2;grid-row:1;line-height:1.2}
+.zone .pct{grid-column:2;grid-row:2;border-left:0;padding-left:0;justify-content:flex-start;align-self:start;font-size:.8rem}
+.zone .kg{grid-column:3;grid-row:1/3;padding-left:12px;font-size:1rem}
+.zhead{padding-block:0 2px}
+.zhead span:nth-child(3){display:none}
+.zhead span:nth-child(4){grid-column:3;padding-left:12px}
+}
+</style>
 </body>
 </html>

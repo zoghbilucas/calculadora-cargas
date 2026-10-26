@@ -10,7 +10,7 @@
 <style>
 :root{
 --bg:#eef1f0; --surface:#ffffff; --ink:#15212b; --muted:#5b6872; --line:#d3dad8;
---accent:#1f6f8b; --warn:#a4501b; --ok:#2f6b3d;
+--accent:#1f6f8b; --on-accent:#ffffff; --warn:#a4501b; --ok:#2f6b3d;
 --z1:#15212b; --z2:#2c4a5c; --z3:#3f7488; --z4:#79a6b4; --z5:#bcd3d9;
 --zt1:#ffffff; --zt2:#ffffff; --zt3:#ffffff; --zt4:#10202a; --zt5:#10202a;
 --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
@@ -19,7 +19,7 @@
 }
 @media (prefers-color-scheme: dark){:root{
 --bg:#0f1519; --surface:#172027; --ink:#e4ebee; --muted:#93a2ab; --line:#2a3741;
---accent:#5fb3cf; --warn:#e3925c; --ok:#7fc28e;
+--accent:#5fb3cf; --on-accent:#0b1418; --warn:#e3925c; --ok:#7fc28e;
 --z1:#e4ebee; --z2:#a9cbd6; --z3:#5fb3cf; --z4:#3a7488; --z5:#24414d;
 --zt1:#0b1418; --zt2:#0b1418; --zt3:#0b1418; --zt4:#e4ebee; --zt5:#e4ebee;
 color-scheme:dark}}
@@ -39,9 +39,14 @@ header,section{display:grid;gap:12px}
 .field{display:grid;gap:6px;min-width:0}
 label,.lbl{font-size:.78rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 input{font:inherit;font-family:var(--mono);font-size:1.5rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%;min-width:0}
-input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .field.full{grid-column:1/-1}
 input.txt{font-family:var(--body);font-size:1.15rem}
+button{font:inherit;cursor:pointer}
+.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{border:1px solid var(--accent);background:var(--accent);color:var(--on-accent);border-radius:6px;padding:11px 18px;font-weight:600}
+.btn.ghost{background:transparent;color:var(--accent)}
+.status{font-size:.88rem;color:var(--ok);font-weight:600}
 .shot{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px}
 .shot .result{padding-top:12px}
 .shot .zone{background:var(--bg)}
@@ -50,6 +55,7 @@ input.txt{font-family:var(--body);font-size:1.15rem}
 .print{display:flex;align-items:center;gap:6px;max-width:220px;font-size:.78rem;line-height:1.3;color:var(--accent);border:1px dashed var(--accent);border-radius:6px;padding:6px 8px}
 .print svg{width:20px;height:20px;flex:none}
 .result{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:2px solid var(--ink);padding-top:14px}
+.result .test{font-family:var(--mono);font-size:.85rem;color:var(--muted);flex-basis:100%;order:3}
 .big{font-family:var(--display);font-weight:700;font-size:4rem;line-height:.9;font-variant-numeric:tabular-nums}
 .big small{font-size:.4em;color:var(--muted);margin-left:4px}
 .zones{display:grid;gap:6px}
@@ -63,6 +69,16 @@ input.txt{font-family:var(--body);font-size:1.15rem}
 .kg{font-weight:500}
 .zone .pct,.zone .kg,.zhead span:nth-child(3),.zhead span:nth-child(4){border-left:1px solid var(--line);align-self:stretch;display:flex;align-items:center;justify-content:flex-end;padding-left:10px}
 .zhead span:nth-child(3),.zhead span:nth-child(4){border-left-color:transparent}
+.list{display:grid;gap:8px}
+.item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:stretch;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.item.on{border-color:var(--accent);box-shadow:inset 4px 0 0 var(--accent)}
+.item .open{background:none;border:0;color:var(--ink);text-align:left;padding:12px 14px;display:grid;gap:2px;min-width:0}
+.item .open strong{font-weight:600;overflow-wrap:anywhere}
+.item .meta{font-family:var(--mono);font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.item .one{font-family:var(--display);font-weight:700;font-size:1.5rem;color:var(--ink)}
+.item .del{background:none;border:0;border-left:1px solid var(--line);color:var(--muted);padding:0 14px;font-size:.82rem;white-space:nowrap}
+.item .del.confirm{color:var(--warn);font-weight:600}
+.empty{border:1px dashed var(--line);border-radius:6px;padding:16px;color:var(--muted);font-size:.92rem}
 .q{font-family:var(--display);font-size:1.35rem;font-weight:600;line-height:1.25;border-left:4px solid var(--accent);padding:4px 0 4px 14px}
 .rir{display:grid;gap:6px}
 .rir details{background:var(--surface);border:1px solid var(--line);border-radius:6px}
@@ -101,8 +117,9 @@ footer{font-size:.78rem;color:var(--muted)}
 <header>
 <p class="eyebrow">Vanguard Performance</p>
 <h1>Minhas cargas</h1>
-<p class="muted">Coloque a maior carga que você levantou no teste e quantas repetições completou com boa técnica (de 1 a 10).</p>
+<p class="muted">Coloque a maior carga que você levantou no teste e quantas repetições completou com boa técnica (de 1 a 10). Salve cada exercício para consultar depois.</p>
 </header>
+
 <section>
 <div class="inputs">
 <div class="field full">
@@ -119,19 +136,33 @@ footer{font-size:.78rem;color:var(--muted)}
 </div>
 </div>
 <p class="warn" id="warn" hidden></p>
+<div class="actions">
+<button type="button" class="btn" id="save">Salvar exercício</button>
+<button type="button" class="btn ghost" id="new">Novo exercício</button>
+<span class="status" id="status" role="status"></span>
+</div>
 </section>
-<section class="shot">
+
+<section class="shot" id="shot">
 <div class="shot-top">
 <h2 id="exname">Agachamento livre</h2>
 <p class="print"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Tire um print desta tela para guardar as zonas deste exercício</p>
 </div>
 <div class="result">
 <span class="lbl">Seu 1RM estimado</span>
-<span class="big" id="e1rm">95<small>kg</small></span>
+<span class="big" id="e1rm">100<small>kg</small></span>
+<span class="test" id="test"></span>
 </div>
 <div class="zones" id="zones"></div>
 <p class="muted">Use estas cargas quando o treino pedir uma zona (ex.: Z1 / 85%).</p>
 </section>
+
+<section>
+<h2>Meus exercícios</h2>
+<div class="list" id="list"></div>
+<p class="muted">Os exercícios ficam salvos neste celular, neste navegador. Toque em um para ver as zonas.</p>
+</section>
+
 <section>
 <h2>Quanto sobrou?</h2>
 <p class="q">Ao fim da série, pergunte: quantas repetições a mais eu faria, com boa técnica?</p>
@@ -179,6 +210,7 @@ footer{font-size:.78rem;color:var(--muted)}
 </ul>
 </div>
 </section>
+
 <section>
 <h2>E na próxima série?</h2>
 <div class="adj">
@@ -188,38 +220,99 @@ footer{font-size:.78rem;color:var(--muted)}
 </div>
 <p class="stop">Perdeu amplitude, a técnica mudou ou sentiu dor fora do normal? Pare ou reduza a carga, independente do RIR.</p>
 </section>
+
 <footer>Estimativa pela equação de Epley (com 1 repetição, a carga do teste é o próprio 1RM). Cargas arredondadas para múltiplos de 5 kg. É um ponto de partida: o desempenho na sessão confirma a carga. Baseado no Manual de Autorregulação Vanguard Performance.</footer>
 </div>
+
 <script>
 (function(){
-const $=id=>document.getElementById(id);
-const fmt=n=>n.toLocaleString('pt-BR',{maximumFractionDigits:1});
-const r5=v=>Math.round(v/5)*5;
-const Z=[
-['Z1','Máxima',80,100,true],['Z2','Submáxima',60,80],['Z3','Moderada',40,60],['Z4','Leve',20,40],['Z5','Muito leve',0,20]
-];
-function render(){
-const c=parseFloat(String($('load').value).replace(',','.'));
-const reps=parseInt($('reps').value,10);
-$('exname').textContent=$('ex').value.trim()||'Meu exercício';
-const w=$('warn');
-if(!(c>0)||!(reps>=1)){
-w.textContent=!(c>0)?'Digite a carga do teste.':'Digite quantas repetições você completou.';
-w.hidden=false;$('e1rm').innerHTML='–<small>kg</small>';$('zones').innerHTML='';return}
-if(reps>10){w.textContent='Acima de 10 repetições a estimativa fica pouco confiável. Prefira um teste com até 5 repetições.';w.hidden=false}
-else w.hidden=true;
-const one=reps===1?c:c*(1+reps/30);
-$('e1rm').innerHTML=fmt(r5(one))+'<small>kg</small>';
-$('zones').innerHTML='<div class="zhead"><span>Zona</span><span></span><span>% 1RM</span><span>Carga</span></div>'+Z.map(function(z,i){
-const lo=r5(one*z[2]/100), hi=r5(one*z[3]/100), n=i+1, lt=z[4]?'':'&lt;';
-return '<div class="zone"><span class="tag" style="background:var(--z'+n+');color:var(--zt'+n+')">'+z[0]+'</span><strong>'+z[1]+'</strong><span class="pct">'+z[2]+'–'+lt+z[3]+'%</span><span class="kg">'+lo+' a '+lt+hi+' kg</span></div>';
-}).join('');
-try{localStorage.setItem('autoreg-s',JSON.stringify({ex:$('ex').value,c:$('load').value,reps:$('reps').value}))}catch(e){}
+var $=function(id){return document.getElementById(id)};
+var r5=function(v){return Math.round(v/5)*5};
+var KEY='autoreg-lista', DRAFT='autoreg-s';
+var Z=[['Z1','Máxima',80,100,true],['Z2','Submáxima',60,80],['Z3','Moderada',40,60],['Z4','Leve',20,40],['Z5','Muito leve',0,20]];
+var list=[], pendingDel=null, statusTimer=null;
+
+function load(){try{list=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(list))list=[]}catch(e){list=[]}}
+function store(){try{localStorage.setItem(KEY,JSON.stringify(list));return true}catch(e){return false}}
+function norm(s){return s.trim().toLowerCase()}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function calc(c,reps){return reps===1?c:c*(1+reps/30)}
+function read(){
+  return {name:$('ex').value.trim(), c:parseFloat(String($('load').value).replace(',','.')), reps:parseInt($('reps').value,10)};
 }
-try{const s=JSON.parse(localStorage.getItem('autoreg-s')||'null');if(s){if(s.ex!=null)$('ex').value=s.ex;$('load').value=s.c;$('reps').value=s.reps}}catch(e){}
-$('ex').addEventListener('input',render);
-$('load').addEventListener('input',render);
-$('reps').addEventListener('input',render);
+function fmtDate(t){var d=new Date(t);return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'2-digit'})}
+function kgTxt(n){return String(n).replace('.',',')}
+
+function render(){
+  var v=read(), w=$('warn');
+  $('exname').textContent=v.name||'Meu exercício';
+  if(!(v.c>0)||!(v.reps>=1)){
+    w.textContent=!(v.c>0)?'Digite a carga do teste.':'Digite quantas repetições você completou.';
+    w.hidden=false;$('e1rm').innerHTML='–<small>kg</small>';$('zones').innerHTML='';$('test').textContent='';renderList();return;
+  }
+  if(v.reps>10){w.textContent='Acima de 10 repetições a estimativa fica pouco confiável. Prefira um teste com até 5 repetições.';w.hidden=false}
+  else w.hidden=true;
+  var one=calc(v.c,v.reps);
+  $('e1rm').innerHTML=r5(one)+'<small>kg</small>';
+  var saved=list.find(function(x){return norm(x.name)===norm(v.name)&&x.c===v.c&&x.reps===v.reps});
+  $('test').textContent='Teste: '+kgTxt(v.c)+' kg × '+v.reps+(saved?' · salvo em '+fmtDate(saved.t):'');
+  $('zones').innerHTML='<div class="zhead"><span>Zona</span><span></span><span>% 1RM</span><span>Carga</span></div>'+Z.map(function(z,i){
+    var lo=r5(one*z[2]/100), hi=r5(one*z[3]/100), n=i+1, lt=z[4]?'':'&lt;';
+    return '<div class="zone"><span class="tag" style="background:var(--z'+n+');color:var(--zt'+n+')">'+z[0]+'</span><strong>'+z[1]+'</strong><span class="pct">'+z[2]+'–'+lt+z[3]+'%</span><span class="kg">'+lo+' a '+lt+hi+' kg</span></div>';
+  }).join('');
+  try{localStorage.setItem(DRAFT,JSON.stringify({ex:$('ex').value,c:$('load').value,reps:$('reps').value}))}catch(e){}
+  renderList();
+}
+
+function renderList(){
+  var cur=norm($('ex').value), el=$('list');
+  if(!list.length){el.innerHTML='<p class="empty">Nenhum exercício salvo ainda. Preencha o teste acima e toque em <strong>Salvar exercício</strong>.</p>';return}
+  el.innerHTML=list.map(function(x,i){
+    var on=norm(x.name)===cur;
+    var del=pendingDel===i;
+    return '<div class="item'+(on?' on':'')+'"><button type="button" class="open" data-i="'+i+'"><strong>'+esc(x.name)+'</strong><span class="meta">'+kgTxt(x.c)+' kg × '+x.reps+' · '+fmtDate(x.t)+'</span><span class="one">1RM '+r5(calc(x.c,x.reps))+' kg</span></button><button type="button" class="del'+(del?' confirm':'')+'" data-d="'+i+'">'+(del?'Confirmar':'Excluir')+'</button></div>';
+  }).join('');
+}
+
+function flash(msg,isWarn){
+  var s=$('status');s.textContent=msg;s.style.color=isWarn?'var(--warn)':'';
+  clearTimeout(statusTimer);statusTimer=setTimeout(function(){s.textContent=''},2500);
+}
+
+$('save').addEventListener('click',function(){
+  var v=read();
+  if(!v.name){flash('Dê um nome ao exercício.',true);$('ex').focus();return}
+  if(!(v.c>0)||!(v.reps>=1)){flash('Preencha carga e repetições.',true);return}
+  var idx=list.findIndex(function(x){return norm(x.name)===norm(v.name)});
+  var item={name:v.name,c:v.c,reps:v.reps,t:Date.now()};
+  if(idx>=0){list[idx]=item}else{list.unshift(item)}
+  list.sort(function(a,b){return a.name.localeCompare(b.name,'pt-BR')});
+  pendingDel=null;
+  if(store()){flash(idx>=0?'Atualizado':'Salvo')}else{flash('Não foi possível salvar neste navegador.',true)}
+  render();
+});
+
+$('new').addEventListener('click',function(){
+  $('ex').value='';$('load').value='';$('reps').value='';pendingDel=null;render();$('ex').focus();
+});
+
+$('list').addEventListener('click',function(e){
+  var o=e.target.closest('.open'), d=e.target.closest('.del');
+  if(o){
+    var x=list[+o.dataset.i];pendingDel=null;
+    $('ex').value=x.name;$('load').value=x.c;$('reps').value=x.reps;render();
+    $('shot').scrollIntoView({behavior:'smooth',block:'start'});
+  } else if(d){
+    var i=+d.dataset.d;
+    if(pendingDel===i){list.splice(i,1);pendingDel=null;store();flash('Excluído')}
+    else{pendingDel=i;setTimeout(function(){if(pendingDel===i){pendingDel=null;renderList()}},4000)}
+    renderList();
+  }
+});
+
+load();
+try{var s=JSON.parse(localStorage.getItem(DRAFT)||'null');if(s){if(s.ex!=null)$('ex').value=s.ex;$('load').value=s.c;$('reps').value=s.reps}}catch(e){}
+['ex','load','reps'].forEach(function(id){$(id).addEventListener('input',render)});
 render();
 })();
 </script>

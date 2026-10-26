@@ -99,15 +99,15 @@ button{font:inherit;cursor:pointer}
 .tips{display:grid;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px}
 .tips h3{font-family:var(--display);font-size:1.25rem;font-weight:700;text-transform:uppercase;margin:0}
 .tips ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:.93rem}
-.days{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.days{display:grid;gap:10px}
 .day{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:6px;padding:14px;display:grid;gap:8px;align-content:start}
 .day h3{font-family:var(--display);font-size:1.3rem;font-weight:700;text-transform:uppercase;margin:0;color:var(--c)}
 .day .sig{font-size:.85rem;color:var(--muted)}
 .day ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:.92rem}
 .day.tired{--c:var(--warn)}
 .day.fresh{--c:var(--ok)}
+.day.normal{--c:var(--accent)}
 .rule{font-weight:600;font-size:.95rem;border-left:4px solid var(--accent);padding:4px 0 4px 12px}
-@media (max-width:560px){.days{grid-template-columns:1fr}}
 .adj{display:grid;gap:8px}
 .a{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
 .a i{width:10px;height:10px;border-radius:50%;background:var(--c);margin-top:7px}
@@ -225,21 +225,30 @@ footer{font-size:.78rem;color:var(--muted)}
 <div class="days">
 <div class="day tired">
 <h3>Dia cansado</h3>
-<p class="sig">Dormiu mal, dia puxado, aquecimento pesou mais que o normal ou a barra já está lenta nas cargas leves.</p>
+<p class="sig">Dormiu mal, dia puxado, aquecimento pesado ou a barra já lenta nas cargas leves.</p>
 <ul>
 <li>Comece pela carga mais baixa da zona.</li>
-<li>Sobrou menos que o pedido? Tire 5 kg na próxima série.</li>
-<li>Não force até a falha para compensar.</li>
+<li>Sobrou menos que o pedido? Tire 5 a 10% da carga.</li>
+<li>Faça o treino, mas sem forçar até a falha.</li>
 <li>A técnica piorou? Encerre o exercício.</li>
+</ul>
+</div>
+<div class="day normal">
+<h3>Dia normal</h3>
+<p class="sig">Sono e energia como de costume, aquecimento sem surpresas.</p>
+<ul>
+<li>Comece pela carga prevista no treino.</li>
+<li>Sobrou o pedido? Mantenha a carga.</li>
+<li>Ajuste série a série pelo que sobrou.</li>
 </ul>
 </div>
 <div class="day fresh">
 <h3>Dia bem recuperado</h3>
-<p class="sig">Dormiu bem, aquecimento leve e a barra subindo rápido.</p>
+<p class="sig">Dormiu bem, energia alta, aquecimento leve e a barra subindo rápido.</p>
 <ul>
-<li>Pode começar pelo meio da zona.</li>
-<li>Sobrou mais que o pedido com boa técnica? Suba 2,5 a 5 kg.</li>
-<li>Mantenha as séries e repetições do treino.</li>
+<li>Pode começar um pouco acima do previsto, sem sair da zona.</li>
+<li>Sobrou mais que o pedido com boa técnica? Suba 2,5 a 5% da carga.</li>
+<li>Não aumente séries nem repetições por conta própria.</li>
 <li>Suba cada repetição o mais rápido que conseguir.</li>
 </ul>
 </div>

@@ -99,6 +99,15 @@ button{font:inherit;cursor:pointer}
 .tips{display:grid;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px}
 .tips h3{font-family:var(--display);font-size:1.25rem;font-weight:700;text-transform:uppercase;margin:0}
 .tips ul{margin:0;padding-left:18px;display:grid;gap:8px;font-size:.93rem}
+.days{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.day{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:6px;padding:14px;display:grid;gap:8px;align-content:start}
+.day h3{font-family:var(--display);font-size:1.3rem;font-weight:700;text-transform:uppercase;margin:0;color:var(--c)}
+.day .sig{font-size:.85rem;color:var(--muted)}
+.day ul{margin:0;padding-left:18px;display:grid;gap:6px;font-size:.92rem}
+.day.tired{--c:var(--warn)}
+.day.fresh{--c:var(--ok)}
+.rule{font-weight:600;font-size:.95rem;border-left:4px solid var(--accent);padding:4px 0 4px 12px}
+@media (max-width:560px){.days{grid-template-columns:1fr}}
 .adj{display:grid;gap:8px}
 .a{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
 .a i{width:10px;height:10px;border-radius:50%;background:var(--c);margin-top:7px}
@@ -208,16 +217,34 @@ footer{font-size:.78rem;color:var(--muted)}
 <div class="cue"><span class="k">Técnica</span><p>Observe a execução mesmo assim. Carga fácil não garante técnica boa.</p></div>
 </div></details>
 </div>
-<div class="tips">
-<h3>Como usar a velocidade a seu favor</h3>
+</section>
+
+<section>
+<h2>Como está seu dia?</h2>
+<p class="muted">Use o aquecimento como termômetro antes da primeira série pesada.</p>
+<div class="days">
+<div class="day tired">
+<h3>Dia cansado</h3>
+<p class="sig">Dormiu mal, dia puxado, aquecimento pesou mais que o normal ou a barra já está lenta nas cargas leves.</p>
 <ul>
-<li><strong>Compare com você mesmo.</strong> O sinal que importa é a barra ficar mais lenta do que estava nas primeiras repetições da mesma série.</li>
-<li><strong>Carga pesada é lenta por natureza.</strong> Uma barra lenta na primeira repetição de uma carga alta não significa que você está perto da falha.</li>
-<li><strong>Não existe tabela fixa.</strong> A relação entre perda de velocidade e reps em reserva muda de exercício para exercício e de pessoa para pessoa.</li>
-<li><strong>Quanto mais perto da falha, mais preciso.</strong> É mais fácil acertar "sobrou uma" do que "sobraram oito". Se ficou em dúvida entre dois níveis, anote o mais próximo da falha.</li>
-<li><strong>Sempre tente com intenção máxima.</strong> Suba a barra o mais rápido possível em todas as repetições. Se você segurar a velocidade de propósito, ela deixa de servir como sinal.</li>
+<li>Comece pela carga mais baixa da zona.</li>
+<li>Sobrou menos que o pedido? Tire 5 kg na próxima série.</li>
+<li>Não force até a falha para compensar.</li>
+<li>A técnica piorou? Encerre o exercício.</li>
 </ul>
 </div>
+<div class="day fresh">
+<h3>Dia bem recuperado</h3>
+<p class="sig">Dormiu bem, aquecimento leve e a barra subindo rápido.</p>
+<ul>
+<li>Pode começar pelo meio da zona.</li>
+<li>Sobrou mais que o pedido com boa técnica? Suba 2,5 a 5 kg.</li>
+<li>Mantenha as séries e repetições do treino.</li>
+<li>Suba cada repetição o mais rápido que conseguir.</li>
+</ul>
+</div>
+</div>
+<p class="rule">Em qualquer dia, quem manda é o esforço pedido no treino. A carga muda para você chegar nele.</p>
 </section>
 
 <section>
